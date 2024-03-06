@@ -1,0 +1,28 @@
+{
+  "name": "produtos-vue",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.9.2",
+    "@vue/apollo-composable": "^4.0.1",
+    "@vue/apollo-option": "^4.0.0",
+    "apollo-boost": "^0.4.9",
+    "graphql": "^15.8.0",
+    "vue": "^3.4.15",
+    "vue-apollo": "^3.1.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.3",
+    "eslint": "^8.49.0",
+    "eslint-plugin-vue": "^9.17.0",
+    "vite": "^5.0.11",
+    "vite-plugin-graphql-loader": "^3.0.1"
+  }
+}
