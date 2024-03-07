@@ -27,6 +27,14 @@
             >
           </td>
         </tr>
+        <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td>{{ totalProdutos }}</td>
+              <td>Total</td>
+            </tr>
+        </tfoot>
       </table>
     </div>
     <ModalCadastro
@@ -186,6 +194,7 @@ export default {
 
 .header button:hover {
   background: #7c7c7c;
+  color: white;
 }
 .conteudo {
   margin-top: 70px;
@@ -309,10 +318,14 @@ tr:nth-child(even) {
 }
 .paginacao button:hover {
   background: #6d6c6c;
+  color: white;
 }
 
 .paginacao span {
   padding-left: 20px;
   padding-right: 20px;
+}
+tfoot {
+  font-weight: bold;
 }
 </style>
