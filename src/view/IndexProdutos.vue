@@ -4,6 +4,24 @@
       <h1>Lista de Produtos:</h1>
       <button @click.prevent="cadastrarProduto = true">Novo produto</button>
     </header>
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Digite o nome do produto"
+        aria-label="Recipient's username"
+        aria-describedby="button-addon2"
+        v-model="produtoBuscado"
+      />
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        id="button-addon2"
+        @click="searchProduto"
+      >
+        Buscar
+      </button>
+    </div>
     <div class="conteudo">
       <table>
         <tr>
@@ -17,23 +35,30 @@
           <td>{{ produto.descricao }}</td>
           <td>{{ produto.quantidade }}</td>
           <td class="iconsAcoes">
-            <span title="Visualizar" class="ti ti-eye" @click="exibirProduto(produto)"></span
-            >
-            <span title="editar" class="ti ti-edit" @click="alterarProduto(produto)"
-              ></span
-            >
-            <span title="remover" class="ti ti-circle-minus" @click="preRemoverProduto(produto)"
-              ></span
-            >
+            <span
+              title="Visualizar"
+              class="ti ti-eye"
+              @click="exibirProduto(produto)"
+            ></span>
+            <span
+              title="editar"
+              class="ti ti-edit"
+              @click="alterarProduto(produto)"
+            ></span>
+            <span
+              title="remover"
+              class="ti ti-circle-minus"
+              @click="preRemoverProduto(produto)"
+            ></span>
           </td>
         </tr>
         <tfoot>
-            <tr>
-              <td></td>
-              <td></td>
-              <td>{{ totalProdutos }}</td>
-              <td>Total</td>
-            </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>{{ totalProdutos }}</td>
+            <td>Total</td>
+          </tr>
         </tfoot>
       </table>
     </div>
@@ -48,22 +73,33 @@
       :produto="produtoAtual"
       @TerminarModalVisualizar="fecharModalVisualizar"
     />
-    <section class="exclusao_product_modal" :class="{ativo: removerProduto}">
-        <div class="exclusao_product_container" >
-            <div class="informacao_modal_exclusao">
-              <h3>Confirma a Exclusão?</h3>
-            </div>
-            <div class="buttons">
-              <button class="buttonCancelar" @click="removerProduto = false">Cancelar</button>
-              <button class="buttonExcluir" @click="excluirProduto(produtoAtualExcluido)">Excluir</button>
-            </div>
+    <section class="exclusao_product_modal" :class="{ ativo: removerProduto }">
+      <div class="exclusao_product_container">
+        <div class="informacao_modal_exclusao">
+          <h3>Confirma a Exclusão?</h3>
         </div>
+        <div class="buttons">
+          <button class="buttonCancelar" @click="removerProduto = false">
+            Cancelar
+          </button>
+          <button
+            class="buttonExcluir"
+            @click="excluirProduto(produtoAtualExcluido)"
+          >
+            Excluir
+          </button>
+        </div>
+      </div>
     </section>
     <div class="paginacao">
-        <button @click="previousPage" :disabled="currentPage === 1">Anterior</button>
-        <span>Página {{ currentPage }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages">Próxima</button>
-      </div>
+      <button @click="previousPage" :disabled="currentPage === 1">
+        Anterior
+      </button>
+      <span>Página {{ currentPage }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages">
+        Próxima
+      </button>
+    </div>
   </div>
 </template>
 
@@ -84,7 +120,8 @@ export default {
       produtoAtualExcluido: null,
       itemsPerPage: 5,
       currentPage: 1,
-      totalPages: null
+      totalPages: null,
+      produtoBuscado: '',
     };
   },
   components: {
@@ -104,7 +141,7 @@ export default {
     async excluirProduto(idProduto) {
       await deleteProduct({ id: idProduto });
       await this.buscarProdutos();
-      this.removerProduto = false
+      this.removerProduto = false;
     },
     exibirProduto(produto) {
       this.produtoAtual = produto;
@@ -114,9 +151,9 @@ export default {
       this.produtoAtual = produto;
       this.cadastrarProduto = true;
     },
-    preRemoverProduto(produto){
-      this.produtoAtualExcluido = produto.id
-      this.removerProduto = true
+    preRemoverProduto(produto) {
+      this.produtoAtualExcluido = produto.id;
+      this.removerProduto = true;
     },
     async buscarProdutos() {
       try {
@@ -126,8 +163,8 @@ export default {
         const endIndex = startIndex + this.itemsPerPage;
         this.listaDeProdutos = allProducts.slice(startIndex, endIndex);
         this.totalProdutos = allProducts.reduce((acc, allProducts) => {
-          return acc + allProducts.quantidade
-        }, 0)
+          return acc + allProducts.quantidade;
+        }, 0);
       } catch (error) {
         this.listaDeProdutos = [];
       }
@@ -144,6 +181,14 @@ export default {
         this.buscarProdutos();
       }
     },
+    searchProduto(){
+      if(this.produtoBuscado) {
+        this.listaDeProdutos = this.listaDeProdutos.filter((produto) => {
+          return produto.nome.includes(this.produtoBuscado)
+        })
+        this.produtoBuscado = ""
+      }
+    }
   },
   async created() {
     await this.buscarProdutos();
@@ -152,7 +197,6 @@ export default {
 </script>
 
 <style scoped>
-
 .container {
   font-family: "Catamaran", sans-serif;
 }
@@ -161,7 +205,7 @@ export default {
   justify-content: space-between;
   margin-top: 40px;
 }
-.quantidadeProdutos{
+.quantidadeProdutos {
   display: flex;
   justify-content: flex-end;
   margin-top: 30px;
@@ -195,6 +239,9 @@ export default {
 .header button:hover {
   background: #7c7c7c;
   color: white;
+}
+.input-group {
+  margin: 40px 0
 }
 .conteudo {
   margin-top: 70px;
@@ -240,7 +287,7 @@ tr:nth-child(even) {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(0,0,0,.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 .exclusao_product_modal {
   position: absolute;
@@ -254,56 +301,56 @@ tr:nth-child(even) {
 }
 
 .exclusao_product_modal.ativo {
-    display: block;
+  display: block;
 }
 
 .exclusao_product_container {
   position: relative;
   margin: 80px auto;
-  background: #ffffff;;
+  background: #ffffff;
   padding: 40px;
   max-width: 800px;
   width: 50%;
   height: 40%;
-  animation: fadeInDown .3s forwards;
+  animation: fadeInDown 0.3s forwards;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border-radius: 10px;
 }
 .buttons {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
 }
-.buttons .buttonCancelar{
-    background: #dad9d8;
-    width: 120px;
-    height: 30px;
-    border-radius: 5px;
-    border: none;
-    box-shadow: #c0c0c0 0px 2px 7px;
-    cursor: pointer;
+.buttons .buttonCancelar {
+  background: #dad9d8;
+  width: 120px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: #c0c0c0 0px 2px 7px;
+  cursor: pointer;
 }
 
 .buttons .buttonCancelar:hover {
   background: #b3b3b3;
 }
 .buttons .buttonExcluir {
-    background: #a6beff;
-    width: 120px;
-    height: 30px;
-    border-radius: 5px;
-    border: none;
-    box-shadow: #c0c0c0 0px 2px 7px;
-    cursor: pointer;
+  background: #a6beff;
+  width: 120px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: #c0c0c0 0px 2px 7px;
+  cursor: pointer;
 }
 .buttons .buttonExcluir:hover {
   background: #82a3fc;
 }
-.paginacao{
-  display:flex;
+.paginacao {
+  display: flex;
   justify-content: center;
   margin-top: 20px;
 }
